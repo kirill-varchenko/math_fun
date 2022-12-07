@@ -1,9 +1,19 @@
 from enum import Enum
-from typing import Generator, Union
+from typing import Generator, Iterable, TypeVar, Union
 
 import more_itertools
 
 from lindenmayer import lindenmayer
+
+T = TypeVar("T")
+
+
+def iter_items_and_connections(
+    S: Iterable[T],
+) -> Generator[Union[T, tuple[T, T]], None, None]:
+    """A B C D -> A (A,B) B (B,C) C (C,D) D"""
+
+    yield from more_itertools.interleave_longest(S, more_itertools.pairwise(S))
 
 
 class Move(Enum):
@@ -105,7 +115,7 @@ def iter_hilbert(max_order: int) -> Generator[list[tuple[int, int]], None, None]
     def L2coords(L: str) -> list[tuple[int, int]]:
         x, y = 0, 0
         coords: list[tuple[int, int]] = [(x, y)]
-        for el in more_itertools.interleave_longest(L, more_itertools.pairwise(L)):
+        for el in iter_items_and_connections(L):
             for move in L_element_moves[el]:
                 x, y = move_coords(x, y, move)
                 coords.append((x, y))
