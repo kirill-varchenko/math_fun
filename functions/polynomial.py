@@ -126,11 +126,24 @@ class Polynomial:
 
     __rmul__ = __mul__
 
-    def __pow__(self, other: int) -> Polynomial:
-        res = Polynomial(1)
-        for _ in range(other):
-            res *= self
-        return res
+    def __pow__(self, power: int) -> Polynomial:
+        n = self.degree
+
+        P = [self.coefficients[0] ** power]
+
+        for k in range(1, power * n + 1):
+            P.append(
+                sum(
+                    (power * (k - i) - i) * self.coefficients[k - i] * P[i]
+                    for i in range(max(0, k - n), k)
+                )
+                / (k * self.coefficients[0])
+            )
+
+        if all(isinstance(coeff, int) for coeff in self.coefficients):
+            P = [int(p) for p in P]
+
+        return Polynomial(*P)
 
     def __truediv__(self, other: Number) -> Polynomial:
         if isinstance(other, Number):
@@ -205,7 +218,9 @@ class Polynomial:
             a, b = b, a % b
         return a.to_monic()
 
-    def get_coprimes_and_gcd(self, other: Polynomial) -> tuple[Polynomial, Polynomial, Polynomial]:
+    def get_coprimes_and_gcd(
+        self, other: Polynomial
+    ) -> tuple[Polynomial, Polynomial, Polynomial]:
         gcd = self.gcd(other)
         return self // gcd, other // gcd, gcd
 

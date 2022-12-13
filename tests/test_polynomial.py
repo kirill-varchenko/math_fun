@@ -55,38 +55,78 @@ def test_sub(A, B, coeffs):
         (Polynomial(1, 2), Polynomial(0, 2), [0, 2, 4]),
         (Polynomial(1, 2), 5, [5, 10]),
         (5, Polynomial(1, 2), [5, 10]),
-        (0, Polynomial(1, 2), [0])
+        (0, Polynomial(1, 2), [0]),
     ],
 )
 def test_mul(A, B, coeffs):
     C = A * B
     assert C.coefficients == coeffs
 
+
 @pytest.mark.parametrize(
     "A,order,coeffs",
     [
         (Polynomial(1, 2), 2, [1, 4, 4]),
         (Polynomial(1, 2), 3, [1, 6, 12, 8]),
+        (
+            Polynomial(2, 0, 4, 1, 4, -2, 2),
+            5,
+            [
+                32,
+                0,
+                320,
+                80,
+                1600,
+                480,
+                5360,
+                1280,
+                12960,
+                1640,
+                23904,
+                -720,
+                35130,
+                -7200,
+                42500,
+                -16079,
+                43940,
+                -22890,
+                38970,
+                -23800,
+                29584,
+                -19240,
+                18640,
+                -11680,
+                9200,
+                -5312,
+                3360,
+                -1520,
+                640,
+                -160,
+                32,
+            ],
+        ),
     ],
 )
 def test_pow(A, order, coeffs):
-    B = A ** order
+    B = A**order
     assert B.coefficients == coeffs
+
 
 @pytest.mark.parametrize(
     "A,coeffs",
     [
         (Polynomial(1, 2), [1, 2]),
         (Polynomial(1), [1]),
-        (Polynomial(Fraction(2,3), Fraction(5,6)), [4, 5]),
-        (Polynomial(Fraction(2,3), Fraction(5,4)), [8, 15]),
-        (Polynomial(Fraction(2,3), 1), [2, 3]),
+        (Polynomial(Fraction(2, 3), Fraction(5, 6)), [4, 5]),
+        (Polynomial(Fraction(2, 3), Fraction(5, 4)), [8, 15]),
+        (Polynomial(Fraction(2, 3), 1), [2, 3]),
     ],
 )
 def test_to_integer(A, coeffs):
     B = A.to_integer()
     assert B.coefficients == coeffs
     assert all(isinstance(coeff, int) for coeff in B.coefficients)
+
 
 @pytest.mark.parametrize(
     "A,B,coeffs",
@@ -97,6 +137,7 @@ def test_to_integer(A, coeffs):
 def test_gcd(A, B, coeffs):
     C = A.gcd(B)
     assert C.coefficients == coeffs
+
 
 def test_eq_zero():
     assert Polynomial(0) == 0
