@@ -1,4 +1,3 @@
-import math
 from fractions import Fraction
 from typing import Any
 
@@ -9,7 +8,6 @@ def pade_approximant(
     taylor_coeffs: list[Any],
     num_degree: int,
     denom_degree: int,
-    to_integer: bool = True,
 ) -> tuple[list, list]:
     """Calculate Padé approximant P/Q coefficients from Taylor series coefficients."""
 
@@ -40,21 +38,19 @@ def pade_approximant(
         for j, q in enumerate(Q):
             P[i] += q * (T[i - j - 1] if i - j >= 1 else 0)
 
-    if to_integer:
-        lcm = math.lcm(*[p.denominator for p in P], *[q.denominator for q in Q])
-        P = [(p * lcm).numerator for p in P]
-        Q = [(q * lcm).numerator for q in Q]
-    else:
-        lcm = 1
-
-    Q.insert(0, lcm)
+    Q.insert(0, Fraction(1))
 
     return P, Q
 
 
 if __name__ == "__main__":
+    from functions.polynomial import Polynomial
+    from functions.rational import Rational
+
     T = [1, 1, "1/2", "1/6", "1/24"]
     P, Q = pade_approximant(T, 2, 2)
+    R = Rational(Polynomial(*P), Polynomial(*Q))
+
     print("Taylor for exp(x):", *T)
-    print("P:", *P)
-    print("Q:", *Q)
+    print(R)
+    print(R.to_integer())

@@ -11,7 +11,7 @@ Inverse Transform: 1 1/2 1/3 1/4 1/5 1/6 1/7 1/8 1/9
 
 ## difference_table.py
 
-`build_difference_table` builds difference table from a given sequence, `make_newton_polynomial` constracts Newton series polynomial from finite differences, which can be used to continue initial sequence.
+`build_difference_table` builds difference table from a given sequence, `make_newton_polynomial` constructs Newton series polynomial from finite differences, which can be used to continue initial sequence.
 
 ```
 1 4 9 16 25 36 49 64 81
@@ -67,6 +67,6 @@ Calculate Padé approximant P/Q coefficients from Taylor series coefficients.
 
 ```
 Taylor for exp(x): 1 1 1/2 1/6 1/24
-P: 12 6 1
-Q: 12 -6 1
+(1 + 1/2x + 1/12x^2)/(1 - 1/2x + 1/12x^2)
+(12 + 6x + x^2)/(12 - 6x + x^2)
 ```
